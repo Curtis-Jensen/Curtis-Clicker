@@ -5,77 +5,83 @@ using UnityEngine;
 
 public class GemSpawner : MonoBehaviour
 {
-    public GameObject gem;
+    public GameObject gemPrefab;
     public GameObject squarePrefab;
-    public float spawnRadius = 2.0f;
+    public Transform gemParent;
     public int gemsPerSquare = 100;
+    public float coalesceSpeed = 1.0f;
 
-    private GameObject gemParent;
-
-    private void Start()
-    {
-        gemParent = new GameObject("Gems");
-    }
+    private int gemCount = 0;
+    private List<GameObject> gemsToDestroy = new List<GameObject>();
 
     public void SpawnGem()
     {
-        Vector3 spawnPosition = GetRandomSpawnPosition();
-        Instantiate(gem, spawnPosition, Quaternion.identity, gemParent.transform);
+        Instantiate(gemPrefab, GetRandomSpawnPosition(), Quaternion.identity, gemParent);
+        gemCount++;
 
-        int numGems = gemParent.transform.childCount;
-        if (numGems >= gemsPerSquare)
+        if (gemCount >= gemsPerSquare)
         {
-            CoalesceGemsIntoSquare();
+            CoalesceGemsAndCreateSquare();
+            gemCount = 0;
         }
     }
 
     private Vector3 GetRandomSpawnPosition()
     {
-        Vector2 randomCircle = UnityEngine.Random.insideUnitCircle.normalized * spawnRadius;
-        Vector3 spawnPosition = transform.position + new Vector3(randomCircle.x, randomCircle.y, 0);
-        return spawnPosition;
+        float x = UnityEngine.Random.Range(-4f, 4f);
+        return new Vector3(x, gameObject.transform.position.y, 0f);
     }
 
-    private void CoalesceGemsIntoSquare()
+    private void CoalesceGemsAndCreateSquare()
     {
-        Vector3 centerPosition = GetRandomSpawnPosition();
-        Rigidbody2D[] rigidbodies = gemParent.GetComponentsInChildren<Rigidbody2D>();
-        Collider2D[] colliders = gemParent.GetComponentsInChildren<Collider2D>();
-        int numGems = rigidbodies.Length;
+        Vector3 squarePosition = GetRandomSpawnPosition();
 
-        for (int i = 0; i < numGems; i++)
+        // Move all gems towards the square position and add them to the destroy list
+        foreach (Transform gem in gemParent)
         {
-            Rigidbody2D rb = rigidbodies[i];
-            Collider2D collider = colliders[i];
-            if (collider.gameObject != squarePrefab)
+            if (gem.gameObject.CompareTag("Gem"))
             {
-                Vector3 targetPosition = centerPosition + (Vector3)UnityEngine.Random.insideUnitCircle * 0.5f;
-                StartCoroutine(MoveToTarget(rb, targetPosition, () =>
-                {
-                    Destroy(collider);
-                    Destroy(rb.gameObject);
-                }));
+                StartCoroutine(MoveGemTowardsSquare(gem.gameObject, squarePosition));
+                gemsToDestroy.Add(gem.gameObject);
             }
         }
 
-        GameObject square = Instantiate(squarePrefab, centerPosition, Quaternion.identity);
-        square.transform.parent = gemParent.transform;
+        // Wait for the gems to coalesce before destroying them and creating the square
+        StartCoroutine(WaitForCoalesceAndCreateSquare(squarePosition));
     }
 
-    private IEnumerator MoveToTarget(Rigidbody2D rb, Vector3 targetPosition, System.Action onComplete)
+    private IEnumerator MoveGemTowardsSquare(GameObject gem, Vector3 squarePosition)
     {
-        float duration = 0.5f;
-        float elapsed = 0.0f;
-        Vector3 startPosition = rb.transform.position;
-        while (elapsed < duration)
+        float t = 0.0f;
+        Vector3 startPos = gem.transform.position;
+        while (t < coalesceSpeed)
         {
-            elapsed += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsed / duration);
-            rb.transform.position = Vector3.Lerp(startPosition, targetPosition, t);
+            t += Time.deltaTime;
+            gem.transform.position = Vector3.Lerp(startPos, squarePosition, t / coalesceSpeed);
             yield return null;
         }
-
-        onComplete?.Invoke();
     }
 
+    private IEnumerator WaitForCoalesceAndCreateSquare(Vector3 squarePosition)
+    {
+        yield return new WaitForSeconds(coalesceSpeed);
+
+        // Destroy all the gems in the destroy list
+        foreach (GameObject gem in gemsToDestroy)
+        {
+            if (gem != null)
+            {
+                Collider2D gemCollider = gem.GetComponent<Collider2D>();
+                if (gemCollider != null)
+                    Destroy(gemCollider);
+                Rigidbody2D gemRigidbody = gem.GetComponent<Rigidbody2D>();
+                if (gemRigidbody != null)
+                    Destroy(gemRigidbody);
+                Destroy(gem);
+            }
+        }
+
+        // Instantiate the square
+        Instantiate(squarePrefab, squarePosition, Quaternion.identity, gemParent);
+    }
 }

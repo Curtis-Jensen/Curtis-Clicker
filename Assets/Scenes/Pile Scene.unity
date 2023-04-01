@@ -632,6 +632,7 @@ MonoBehaviour:
   squarePrefab: {fileID: 2876531251910716507, guid: 79c37ca264e822540a6d177ad7ce387d, type: 3}
   gemParent: {fileID: 1345226239}
   gemsPerSquare: 10
+  coalesceSpeed: 0.5
 --- !u!4 &1345226239
 Transform:
   m_ObjectHideFlags: 0
