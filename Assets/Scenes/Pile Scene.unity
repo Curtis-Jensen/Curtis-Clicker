@@ -628,8 +628,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef186935a4d7d7d488c20364791980a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gemPrefab: {fileID: 8764255156024155353, guid: a59c3935cb1f8ce49bae1fbd2c4c21df, type: 3}
-  squarePrefab: {fileID: 2876531251910716507, guid: 79c37ca264e822540a6d177ad7ce387d, type: 3}
+  gemPrefab: {fileID: 3947838664023719529, guid: 92107d14a18c96e4baa360e54db175d3, type: 3}
+  squarePrefab: {fileID: 5411482991513360243, guid: f304843fba21bca41b178c50135b9aaa, type: 3}
   gemParent: {fileID: 1345226239}
   gemsPerSquare: 10
   coalesceSpeed: 0.5

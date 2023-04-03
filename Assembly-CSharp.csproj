@@ -57,8 +57,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assets\Scripts\CentralCalculator.cs" />
+    <Compile Include="Assets\Scripts\GemSpawner.cs" />
     <Compile Include="Assets\Scripts\Service.cs" />
-    <Compile Include="Assets\GemSpawner.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
