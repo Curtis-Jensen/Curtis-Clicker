@@ -7,7 +7,6 @@ public class GemSpawner : MonoBehaviour
 {
     public GameObject gemPrefab;
     public GameObject squarePrefab;
-    public Transform gemParent;
     public int gemsPerSquare = 100;
     public float coalesceSpeed = 1.0f;
 
@@ -16,7 +15,7 @@ public class GemSpawner : MonoBehaviour
 
     public void SpawnGem()
     {
-        Instantiate(gemPrefab, GetRandomSpawnPosition(), Quaternion.identity, gemParent);
+        Instantiate(gemPrefab, GetRandomSpawnPosition(), Quaternion.identity, gameObject.transform);
         gemCount++;
 
         if (gemCount >= gemsPerSquare)
@@ -37,7 +36,7 @@ public class GemSpawner : MonoBehaviour
         Vector3 squarePosition = GetRandomSpawnPosition();
 
         // Move all gems towards the square position and add them to the destroy list
-        foreach (Transform gem in gemParent)
+        foreach (Transform gem in gameObject.transform)
         {
             if (gem.gameObject.CompareTag("Gem"))
             {
@@ -82,6 +81,6 @@ public class GemSpawner : MonoBehaviour
         }
 
         // Instantiate the square
-        Instantiate(squarePrefab, squarePosition, Quaternion.identity, gemParent);
+        Instantiate(squarePrefab, squarePosition, Quaternion.identity, gameObject.transform);
     }
 }
