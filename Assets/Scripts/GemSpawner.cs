@@ -7,12 +7,18 @@ public class GemSpawner : MonoBehaviour
     public GameObject[] gemList;
     public int gemsPerHigherGem = 10;
     public float coalesceSpeed = 1.0f;
+    public float buttonDelay = 2.0f;
 
     private int gemCount = 0;
     private List<GameObject> gemsToDestroy = new List<GameObject>();
+    private bool canPressButton = true;
 
     public void SpawnGem()
     {
+        if (!canPressButton) return;
+        canPressButton = false;
+        StartCoroutine(ButtonDelay());
+
         Instantiate(gemList[0], GetRandomSpawnPosition(), Quaternion.identity, gameObject.transform);
         gemCount++;
 
@@ -81,5 +87,11 @@ public class GemSpawner : MonoBehaviour
 
         // Instantiate the higher gem
         Instantiate(gemList[1], higherGemPosition, Quaternion.identity, gameObject.transform);
+    }
+
+    private IEnumerator ButtonDelay()
+    {
+        yield return new WaitForSeconds(buttonDelay);
+        canPressButton = true;
     }
 }

@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 398191581}
   - component: {fileID: 398191583}
   m_Layer: 0
-  m_Name: Wall (1)
+  m_Name: Wall 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -633,6 +633,7 @@ MonoBehaviour:
   - {fileID: 5411482991513360243, guid: f304843fba21bca41b178c50135b9aaa, type: 3}
   gemsPerHigherGem: 10
   coalesceSpeed: 0.5
+  buttonDelay: 0
 --- !u!4 &1345226239
 Transform:
   m_ObjectHideFlags: 0
