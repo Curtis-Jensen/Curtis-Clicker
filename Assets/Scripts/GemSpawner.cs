@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class GemSpawner : MonoBehaviour
 {
-    public GameObject gemPrefab;
-    public GameObject squarePrefab;
+    public GameObject[] gemList;
     public int gemsPerSquare = 100;
     public float coalesceSpeed = 1.0f;
 
@@ -14,15 +13,16 @@ public class GemSpawner : MonoBehaviour
 
     public void SpawnGem()
     {
-        Instantiate(gemPrefab, GetRandomSpawnPosition(), Quaternion.identity, gameObject.transform);
+        Instantiate(gemList[0], GetRandomSpawnPosition(), Quaternion.identity, gameObject.transform);
         gemCount++;
 
         if (gemCount >= gemsPerSquare)
         {
-            CoalesceGemsAndCreateSquare();
+            CoalesceToHigherGem();
             gemCount = 0;
         }
     }
+
 
     private Vector3 GetRandomSpawnPosition()
     {
@@ -30,7 +30,7 @@ public class GemSpawner : MonoBehaviour
         return new Vector3(x, gameObject.transform.position.y, 0f);
     }
 
-    private void CoalesceGemsAndCreateSquare()
+    private void CoalesceToHigherGem()
     {
         Vector3 squarePosition = GetRandomSpawnPosition();
 
@@ -39,28 +39,28 @@ public class GemSpawner : MonoBehaviour
         {
             if (gem.gameObject.CompareTag("Gem"))
             {
-                StartCoroutine(MoveGemTowardsSquare(gem.gameObject, squarePosition));
+                StartCoroutine(MoveGemTowardsCenter(gem.gameObject, squarePosition));
                 gemsToDestroy.Add(gem.gameObject);
             }
         }
 
-        // Wait for the gems to coalesce before destroying them and creating the square
-        StartCoroutine(WaitForCoalesceAndCreateSquare(squarePosition));
+        // Wait for the gems to coalesce before destroying them and creating the higher Gem
+        StartCoroutine(WaitForCoalesceAndCreateGem(squarePosition));
     }
 
-    private IEnumerator MoveGemTowardsSquare(GameObject gem, Vector3 squarePosition)
+    private IEnumerator MoveGemTowardsCenter(GameObject gem, Vector3 highGemPosition)
     {
         float t = 0.0f;
         Vector3 startPos = gem.transform.position;
         while (t < coalesceSpeed)
         {
             t += Time.deltaTime;
-            gem.transform.position = Vector3.Lerp(startPos, squarePosition, t / coalesceSpeed);
+            gem.transform.position = Vector3.Lerp(startPos, highGemPosition, t / coalesceSpeed);
             yield return null;
         }
     }
 
-    private IEnumerator WaitForCoalesceAndCreateSquare(Vector3 squarePosition)
+    private IEnumerator WaitForCoalesceAndCreateGem(Vector3 squarePosition)
     {
         yield return new WaitForSeconds(coalesceSpeed);
 
@@ -78,8 +78,9 @@ public class GemSpawner : MonoBehaviour
                 Destroy(gem);
             }
         }
+        gemsToDestroy.Clear();
 
         // Instantiate the square
-        Instantiate(squarePrefab, squarePosition, Quaternion.identity, gameObject.transform);
+        Instantiate(gemList[1], squarePosition, Quaternion.identity, gameObject.transform);
     }
 }
