@@ -7,7 +7,7 @@ public class GemSpawner : MonoBehaviour
     public GameObject[] gemList;
     public int gemsPerHigherGem = 10;
     public float coalesceSpeed = 1.0f;
-    public float buttonDelay = 2.0f;
+    public float buttonDelay;
 
     private int gemCount = 0;
     private List<GameObject> gemsToDestroy = new List<GameObject>();
@@ -39,10 +39,18 @@ public class GemSpawner : MonoBehaviour
     {
         Vector3 higherGemPosition = GetRandomSpawnPosition();
 
-        // Move all gems towards the higher gem position and add them to the destroy list
-        foreach (Transform gem in gameObject.transform)
+        List<GameObject> children = new List<GameObject>();
+        for (int i = 0; i < transform.childCount; i++)
         {
-            if (gem.gameObject.CompareTag("Gem"))
+            Transform childTransform = transform.GetChild(i);
+            GameObject childGameObject = childTransform.gameObject;
+            children.Add(childGameObject);
+        }
+
+        // Move all gems towards the higher gem position and add them to the destroy list
+        foreach (GameObject gem in children)
+        {
+            if (gem.CompareTag("Gem"))
             {
                 StartCoroutine(MoveGemTowardsCenter(gem.gameObject, higherGemPosition));
                 gemsToDestroy.Add(gem.gameObject);
