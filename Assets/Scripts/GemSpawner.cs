@@ -23,9 +23,11 @@ public class GemSpawner : MonoBehaviour
      * 2 Instantiate a gem of the given index */
     public void SpawnGem(int index)
     {
-        if (!canPressButton) return; // 1
-        canPressButton = false;
-        StartCoroutine(ButtonDelay());
+        // Commented out because recursion doesn't work, even when the button delay is 0.  Probably need this part of gemspawning to be the gem spawn button.
+
+        //if (!canPressButton) return; // 1
+        //canPressButton = false;
+        //StartCoroutine(ButtonDelay());
 
         var newSpawnPosition = GetRandomSpawnPosition(); // 2
 
