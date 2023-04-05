@@ -630,8 +630,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gemList:
   - {fileID: 3947838664023719529, guid: 92107d14a18c96e4baa360e54db175d3, type: 3}
+  - {fileID: 2739251514995458467, guid: 07a161068f2146941badb0ac827ddaa2, type: 3}
   - {fileID: 5411482991513360243, guid: f304843fba21bca41b178c50135b9aaa, type: 3}
-  gemsPerHigherGem: 10
+  gemsPerHigherGem: 2
   coalesceSpeed: 0.5
   buttonDelay: 0
 --- !u!4 &1345226239
@@ -734,7 +735,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1345226238}
         m_TargetAssemblyTypeName: GemSpawner, Assembly-CSharp
         m_MethodName: SpawnGem
-        m_Mode: 1
+        m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

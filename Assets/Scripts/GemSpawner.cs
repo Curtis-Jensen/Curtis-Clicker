@@ -9,23 +9,33 @@ public class GemSpawner : MonoBehaviour
     public float coalesceSpeed = 1.0f;
     public float buttonDelay;
 
-    private int gemCount = 0;
+    private int[] gemCounts;
     private List<GameObject> gemsToDestroy = new List<GameObject>();
     private bool canPressButton = true;
 
-    public void SpawnGem()
+    private void Start()
     {
-        if (!canPressButton) return;
+        gemCounts = new int[gemList.Length];
+    }
+
+    /* 1 Wait for the button press
+     * 
+     * 2 Instantiate a gem of the given index */
+    public void SpawnGem(int index)
+    {
+        if (!canPressButton) return; // 1
         canPressButton = false;
         StartCoroutine(ButtonDelay());
 
-        Instantiate(gemList[0], GetRandomSpawnPosition(), Quaternion.identity, gameObject.transform);
-        gemCount++;
+        var newSpawnPosition = GetRandomSpawnPosition(); // 2
 
-        if (gemCount >= gemsPerHigherGem)
+        Instantiate(gemList[index], newSpawnPosition, Quaternion.identity, gameObject.transform);
+        gemCounts[index]++;
+
+        if (gemCounts[index] >= gemsPerHigherGem && index < gemList.Length - 1) // This might need to be just "index < gemList.Length - 0"
         {
-            CoalesceToHigherGem();
-            gemCount = 0;
+            gemCounts[index] = 0;
+            StartCoroutine(CoalesceToHigherGem(newSpawnPosition, index + 1));
         }
     }
 
@@ -35,10 +45,8 @@ public class GemSpawner : MonoBehaviour
         return new Vector3(x, gameObject.transform.position.y, 0f);
     }
 
-    private void CoalesceToHigherGem()
+    private IEnumerator CoalesceToHigherGem(Vector2 higherGemPosition, int higherGemIndex)
     {
-        Vector3 higherGemPosition = GetRandomSpawnPosition();
-
         List<GameObject> children = new List<GameObject>();
         for (int i = 0; i < transform.childCount; i++)
         {
@@ -58,23 +66,6 @@ public class GemSpawner : MonoBehaviour
         }
 
         // Wait for the gems to coalesce before destroying them and creating the higher gem
-        StartCoroutine(WaitForCoalesceAndCreateGem(higherGemPosition));
-    }
-
-    private IEnumerator MoveGemTowardsCenter(GameObject gem, Vector3 higherGemPosition)
-    {
-        float t = 0.0f;
-        Vector3 startPos = gem.transform.position;
-        while (t < coalesceSpeed)
-        {
-            t += Time.deltaTime;
-            gem.transform.position = Vector3.Lerp(startPos, higherGemPosition, t / coalesceSpeed);
-            yield return null;
-        }
-    }
-
-    private IEnumerator WaitForCoalesceAndCreateGem(Vector3 higherGemPosition)
-    {
         yield return new WaitForSeconds(coalesceSpeed);
 
         // Destroy all the gems in the destroy list
@@ -93,8 +84,20 @@ public class GemSpawner : MonoBehaviour
         }
         gemsToDestroy.Clear();
 
-        // Instantiate the higher gem
-        Instantiate(gemList[1], higherGemPosition, Quaternion.identity, gameObject.transform);
+        // Create the higher gem
+        Instantiate(gemList[higherGemIndex], higherGemPosition, Quaternion.identity, gameObject.transform);
+    }
+
+    private IEnumerator MoveGemTowardsCenter(GameObject gem, Vector3 higherGemPosition)
+    {
+        float t = 0.0f;
+        Vector3 startPos = gem.transform.position;
+        while (t < coalesceSpeed)
+        {
+            t += Time.deltaTime;
+            gem.transform.position = Vector3.Lerp(startPos, higherGemPosition, t / coalesceSpeed);
+            yield return null;
+        }
     }
 
     private IEnumerator ButtonDelay()
