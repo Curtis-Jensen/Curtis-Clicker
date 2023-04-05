@@ -18,36 +18,46 @@ public class GemSpawner : MonoBehaviour
         gemCounts = new int[gemList.Length];
     }
 
-    /* 1 Wait for the button press
-     * 
-     * 2 Instantiate a gem of the given index */
-    public void SpawnGem(int index)
+    public void SpawnGemButton()
     {
-        // Commented out because recursion doesn't work, even when the button delay is 0.  Probably need this part of gemspawning to be the gem spawn button.
+        if (!canPressButton) return;
+        canPressButton = false;
+        StartCoroutine(ButtonDelay());
 
-        //if (!canPressButton) return; // 1
-        //canPressButton = false;
-        //StartCoroutine(ButtonDelay());
+        SpawnGem(0);
+    }
 
-        var newSpawnPosition = GetRandomSpawnPosition(); // 2
+    IEnumerator ButtonDelay()
+    {
+        yield return new WaitForSeconds(buttonDelay);
+        canPressButton = true;
+    }
+
+    void SpawnGem(int index)
+    {
+        var newSpawnPosition = GetRandomSpawnPosition();
 
         Instantiate(gemList[index], newSpawnPosition, Quaternion.identity, gameObject.transform);
+
+        if (index > gemList.Length - 1) return;
         gemCounts[index]++;
 
-        if (gemCounts[index] >= gemsPerHigherGem && index < gemList.Length - 1) // This might need to be just "index < gemList.Length - 0"
+        if (gemCounts[index] >= gemsPerHigherGem)
         {
             gemCounts[index] = 0;
             StartCoroutine(CoalesceToHigherGem(newSpawnPosition, index + 1));
+
+            //SpawnGem(index + 1);
         }
     }
 
-    private Vector3 GetRandomSpawnPosition()
+    Vector3 GetRandomSpawnPosition()
     {
-        float x = UnityEngine.Random.Range(-4f, 4f);
+        float x = Random.Range(-4f, 4f);
         return new Vector3(x, gameObject.transform.position.y, 0f);
     }
 
-    private IEnumerator CoalesceToHigherGem(Vector2 higherGemPosition, int higherGemIndex)
+    IEnumerator CoalesceToHigherGem(Vector2 higherGemPosition, int higherGemIndex)
     {
         List<GameObject> children = new List<GameObject>();
         for (int i = 0; i < transform.childCount; i++)
@@ -90,7 +100,7 @@ public class GemSpawner : MonoBehaviour
         Instantiate(gemList[higherGemIndex], higherGemPosition, Quaternion.identity, gameObject.transform);
     }
 
-    private IEnumerator MoveGemTowardsCenter(GameObject gem, Vector3 higherGemPosition)
+    IEnumerator MoveGemTowardsCenter(GameObject gem, Vector3 higherGemPosition)
     {
         float t = 0.0f;
         Vector3 startPos = gem.transform.position;
@@ -100,11 +110,5 @@ public class GemSpawner : MonoBehaviour
             gem.transform.position = Vector3.Lerp(startPos, higherGemPosition, t / coalesceSpeed);
             yield return null;
         }
-    }
-
-    private IEnumerator ButtonDelay()
-    {
-        yield return new WaitForSeconds(buttonDelay);
-        canPressButton = true;
     }
 }
