@@ -7,7 +7,6 @@ public class GemSpawner : MonoBehaviour
     public GameObject[] gemList;
     public int gemsPerHigherGem = 10;
     public float coalesceSpeed = 1.0f;
-    public float buttonDelay;
 
     private int[] gemCounts;
     private List<GameObject> gemsToDestroy = new List<GameObject>();
@@ -18,16 +17,16 @@ public class GemSpawner : MonoBehaviour
         gemCounts = new int[gemList.Length];
     }
 
-    public void SpawnGemButton()
+    public void SpawnGemButton(float buttonDelay)
     {
         if (!canPressButton) return;
         canPressButton = false;
-        StartCoroutine(ButtonDelay());
+        StartCoroutine(ButtonDelay(buttonDelay));
 
         SpawnGem(0);
     }
 
-    IEnumerator ButtonDelay()
+    IEnumerator ButtonDelay(float buttonDelay)
     {
         yield return new WaitForSeconds(buttonDelay);
         canPressButton = true;
