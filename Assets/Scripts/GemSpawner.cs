@@ -7,12 +7,13 @@ public class GemSpawner : MonoBehaviour
     public GameObject[] gemList;
     public int gemsPerHigherGem = 10;
     public float coalesceSpeed = 1.0f;
+    public float spreadAmount = 6f;
 
-    private int[] gemCounts;
-    private List<GameObject> gemsToDestroy = new List<GameObject>();
-    private bool canPressButton = true;
+    int[] gemCounts;
+    List<GameObject> gemsToDestroy = new List<GameObject>();
+    bool canPressButton = true;
 
-    private void Start()
+    void Start()
     {
         gemCounts = new int[gemList.Length];
     }
@@ -52,8 +53,9 @@ public class GemSpawner : MonoBehaviour
 
     Vector3 GetRandomSpawnPosition()
     {
-        float x = Random.Range(-4f, 4f);
-        return new Vector3(x, gameObject.transform.position.y, 0f);
+        var parentPosition = gameObject.transform.position;
+        float x = Random.Range(parentPosition.x - spreadAmount, parentPosition.x + spreadAmount);
+        return new Vector3(x, parentPosition.y, 0f);
     }
 
     IEnumerator CoalesceToHigherGem(Vector2 higherGemPosition, int higherGemIndex)

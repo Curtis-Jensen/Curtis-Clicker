@@ -634,7 +634,7 @@ MonoBehaviour:
   - {fileID: 5411482991513360243, guid: f304843fba21bca41b178c50135b9aaa, type: 3}
   gemsPerHigherGem: 2
   coalesceSpeed: 0.5
-  buttonDelay: 0
+  spreadAmount: 6
 --- !u!4 &1345226239
 Transform:
   m_ObjectHideFlags: 0
@@ -735,7 +735,7 @@ MonoBehaviour:
       - m_Target: {fileID: 1345226238}
         m_TargetAssemblyTypeName: GemSpawner, Assembly-CSharp
         m_MethodName: SpawnGemButton
-        m_Mode: 1
+        m_Mode: 4
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

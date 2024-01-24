@@ -8,7 +8,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
     <ProjectGuid>{3063A551-F8FB-C6B5-E24F-25C2B89E0A2E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -58,7 +59,7 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\CentralCalculator.cs" />
     <Compile Include="Assets\Scripts\GemSpawner.cs" />
-    <Compile Include="Assets\Scripts\Service.cs" />
+    <Compile Include="Assets\Scripts\Investment.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">
