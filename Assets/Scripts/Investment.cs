@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Service : MonoBehaviour
+public class Investment : MonoBehaviour
 {
     public float cost;
     public float payout;
