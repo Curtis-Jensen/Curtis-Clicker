@@ -30,7 +30,7 @@ public class Investment : MonoBehaviour
         button.interactable = affordable;
     }
 
-    public void BuyPIE()
+    public void BuyInvestment()
     {
         Debug.Log(serviceName + "s purchased.");
 
