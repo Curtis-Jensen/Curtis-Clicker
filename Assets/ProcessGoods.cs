@@ -13,6 +13,8 @@ public class ProcessGoods : MonoBehaviour
     CentralCalculator calculator;
     Button processButton;
 
+    bool isProcessing = false;
+
     /* Finds the main text of the button by looking for the text object
      * Finds the central calculator by searching for its name
      */
@@ -26,17 +28,23 @@ public class ProcessGoods : MonoBehaviour
 
     void Update()
     {
-        bool affordable = calculator.gold > cost;
+        bool affordable = calculator.gold > cost && !isProcessing;
         processButton.interactable = affordable;
     }
 
     public void Process()
     {
-        StartCoroutine(ProcessingCoroutine());
+        if (!isProcessing)
+        {
+            StartCoroutine(ProcessingCoroutine());
+        }
     }
 
     IEnumerator ProcessingCoroutine()
     {
+        isProcessing = true;
+        processButton.interactable = false;
+
         Debug.Log(processingName + " in progress...");
 
         calculator.gold -= cost;
@@ -48,5 +56,8 @@ public class ProcessGoods : MonoBehaviour
         calculator.DisplayGold();
 
         Debug.Log(processingName + " completed. Earned: " + payout);
+
+        isProcessing = false;
+        processButton.interactable = true;
     }
 }

@@ -843,8 +843,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01e1b5ffd62eb194f983a83c0b7becd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cost: 10
-  payout: 20
+  cost: 40
+  payout: 70
   processingTime: 2
 --- !u!1 &1340836004
 GameObject:
@@ -1169,7 +1169,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8200388732246882272, guid: 8097a0526968ef64fb3ef88d3cba7d08, type: 3}
       propertyPath: cost
-      value: 100
+      value: 1000
       objectReference: {fileID: 0}
     - target: {fileID: 8200388732246882272, guid: 8097a0526968ef64fb3ef88d3cba7d08, type: 3}
       propertyPath: payout
